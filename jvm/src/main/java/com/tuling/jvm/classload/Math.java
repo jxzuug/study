@@ -22,6 +22,8 @@ public class Math {
 
     public static void main(String[] args) {
         Math math = new Math();
-        math.compute();
+        while (true){
+            math.compute();
+        }
     }
 }
