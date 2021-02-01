@@ -21,7 +21,7 @@ public class NioSelectorServer {
     public static void main(String[] args) throws IOException {
         // 创建NIO ServerSocketChannel,与BIO的serverSocket类似
         ServerSocketChannel serverSocket = ServerSocketChannel.open();
-        serverSocket.socket().bind(new InetSocketAddress(9000));
+
         // 设置ServerSocketChannel为非阻塞
         serverSocket.configureBlocking(false);
         // 打开Selector处理Channel,即创建epoll
@@ -30,12 +30,23 @@ public class NioSelectorServer {
         serverSocket.register(selector, SelectionKey.OP_ACCEPT);
         System.out.println("服务启动成功");
 
+        new Thread(() -> {
+            try {
+                Thread.sleep(10500);
+                serverSocket.socket().bind(new InetSocketAddress(9000));
+                System.out.println("绑定端口成功");
+            } catch (IOException | InterruptedException e) {
+                e.printStackTrace();
+            }
+        }).start();
+
         while (true) {
             // 阻塞等待需要处理的事情发生
-            selector.select();
+            selector.select(100);
 
             // 获取selector中注册的全部事件的SelectorKey 实例
             Set <SelectionKey> selectionKeys = selector.selectedKeys();
+            System.out.println(selectionKeys.size());
             Iterator <SelectionKey> iterator = selectionKeys.iterator();
 
             // 遍历SelectionKey对事件进行处理
