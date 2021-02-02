@@ -26,4 +26,18 @@ public class Math {
             math.compute();
         }
     }
+
+    /**
+     * 递归1 + 2 + ... + maxNum
+     * @param maxNum
+     * @return
+     */
+    public static int recursionAdd(int maxNum) {
+        if (maxNum == 1) {
+            return 1;
+        } else {
+            return maxNum + recursionAdd(maxNum - 1);
+        }
+    }
+
 }
